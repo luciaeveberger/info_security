@@ -18,9 +18,23 @@ class Secret(models.Model):
     country_of_origin = models.ForeignKey('Country',on_delete=models.PROTECT)
     rank = models.IntegerField()
 
+
 class UserProfile(models.Model):
     #username, password, first and last name and email are included in djangos user class
 
-    user = models.OneToOneField(User)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     address = models.CharField(max_length = 264, unique = False, blank = True)
     phone = models.CharField(max_length = 20,  blank = True)
+
+
+class Cart(models.Model):
+
+    user = models.ForeignKey('UserProfile', on_delete=models.PROTECT)
+    purchase_date = models.DateTimeField( auto_now_add = True)
+
+
+class PurchasedItem(models.Model):
+
+    cart = models.ForeignKey('Cart', on_delete=models.CASCADE)
+    secret = models.ForeignKey('Secret', on_delete=models.CASCADE)
+    purchased_price = models.DecimalField(decimal_places=2, max_digits=10)

@@ -1,5 +1,6 @@
 <!-- templates/index.html -->
 <!DOCTYPE html>
+{% load staticfiles %}
 <html>
     <head>
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
@@ -22,5 +23,11 @@
       </div>
     </nav>
         <h1>Secrets Secrets</h1>
+        <p>
+          {{inserted_stuff}}
+        </p>
+        <img src="{% static 'images/sandman.jpg' %}" alt="error">
+
+
     </body>
 </html>

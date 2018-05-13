@@ -6,11 +6,18 @@ import django
 django.setup()
 
 import random
+import string
 from secretsmodules.models import *
 import csv
 from faker import Faker
 from django.contrib.auth.models import User
+from django.core.files import File
+import string
+
 fakegen = Faker()
+
+def random_string_generator(size=10, chars=string.ascii_lowercase + string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))
 
 def add_countries():
     dir = os.path.join(os.getcwd(),'tempdata','countries.csv')
@@ -24,18 +31,23 @@ def add_countries():
 def add_secrets(n):
     countries = list(Country.objects.all())
     dir = os.path.join(os.getcwd(),'tempdata','images')
-    images = [os.path.abspath(x) for x in os.listdir(dir)]
+
+    images = [os.path.join(dir,x) for x in os.listdir(dir)]
 
     for i in range(0,n):
         title = fakegen.sentence()
         description = fakegen.text()
         price = float(random.randrange(500,10000))
         imagePath = images[random.randint(0,len(images)-1)] #I don't know how to save it programically, doing empty for now
+        f = open(imagePath,'rb')
+        img =File(f)
         date = fakegen.date_between(start_date="-1y", end_date="today")
         country = countries[random.randint(0,len(countries)-1)]
         rank = random.randint(1,5)
         secret = Secret.objects.get_or_create(title = title, description = description,
-                                                price = price, date = date, country_of_origin = country, rank = rank)
+                                                price = price, date = date, country_of_origin = country, rank = rank)[0]
+        secret.picture.save(random_string_generator(size = 32)+'.jpg',img,True)
+        secret.save()
 
 def add_users(n):
     for i in range(0,n):
@@ -71,4 +83,5 @@ if __name__ == '__main__':
     add_secrets(30)
     add_users(8)
     add_carts(7)
+
     print('done')

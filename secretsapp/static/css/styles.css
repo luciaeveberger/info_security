@@ -1,0 +1,14 @@
+body{
+  background-color: #FFF8E7;
+}
+.secret-entry{
+  min-height: 400px;
+  border: 1px solid black;
+  border-radius: 5%;
+  margin-top: 50px;
+}
+
+.buy-btn{
+  position: absolute;
+  bottom: 0px;
+}

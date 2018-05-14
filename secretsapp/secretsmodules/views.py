@@ -22,6 +22,10 @@ class HomePageView(TemplateView):
         secrets = Secret.objects.all()
         my_dict = {'all_secrets':secrets}
         return render(request, 'secretmodules/index.html', context=my_dict)
+class DetailsView(TemplateView):
+    def get(self, request, **kwargs):
+
+        return HttpResponse(kwargs['id'])
 
 class RegisterForm(TemplateView):
 

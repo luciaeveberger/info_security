@@ -6,7 +6,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    url(r'^secretsmodules/', include('secretsmodules.urls')),
+    # url(r'^secretsmodules/', include('secretsmodules.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^', include('secretsmodules.urls')),
 ]

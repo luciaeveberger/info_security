@@ -1,31 +1,7 @@
-<!-- templates/index.html -->
 <!DOCTYPE html>
+{% extends "secretmodules/layout.html" %}
 {% load staticfiles %}
-<html>
-    <head>
-        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
-        <link rel="stylesheet" href="{% static 'css/styles.css' %}"\>
-        <meta charset="utf-8">
-        <title>Howdy!</title>
-    </head>
-    <body>
-    <nav class="navbar navbar-inverse">
-      <div class="container-fluid">
-        <div class="navbar-header">
-          <a class="navbar-brand" href="#"><i> Secrets </i></a>
-        </div>
-        <ul class="nav navbar-nav">
-          <li class="active"><a href="#">Home</a></li>
-          <li><a href="#">Page 1</a></li>
-          <li><a href="#">Page 2</a></li>
-          <li><a href="#">Page 3</a></li>
-        </ul>
-      </div>
-    </nav>
-
-
-    <div class="container">
+  {% block body_block %}
         <div class="row">
             {% if all_secrets %}
             <div class="col-lg-12">
@@ -43,9 +19,12 @@
                 <img src="{% static 'images/sandman.jpg' %}" height=100px>
                 {% endif %}
                 <br>
-                <a class="btn btn-success buy-btn" href='#'>
+                <a class="btn btn-success buy-btn" href="#">
 
                    Buy  {{secret.price }} $
+                </a>
+                <a class="btn btn-primary " href="{% url 'secretsmodules:details' id=secret.id %}">
+                  Details
                 </a>
             </div>
             {% endfor %}
@@ -54,13 +33,4 @@
             <h3>No Secrets Found</h3>
             {% endif %}
         </div>
-    </div>
-        <!-- <h1>Secrets Secrets</h1>
-        <p>
-          {{inserted_stuff}}
-        </p>
-        <img src="{% static 'images/sandman.jpg' %}" alt="error"> -->
-
-
-    </body>
-</html>
+   {% endblock %}

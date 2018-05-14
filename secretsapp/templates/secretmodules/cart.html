@@ -1,0 +1,18 @@
+{% extends 'secretmodules/base.html' %}
+    {% block content %}
+<div>
+    <h1> Cart details </h1>
+    {{request.session.cart}}
+     <div class="container">
+        <div class="row">
+            {% for item in request.session.cart %}
+            <div class='col-lg-3 col-md-4 col-sm-6 col-xs-12 secret-entry' >
+                        <h4>
+                        {{request.session.cart.item.fields.title}}
+                        </h4>
+            </div>
+            {% endfor %}
+        </div>
+     </div>
+</div>
+{% endblock %}

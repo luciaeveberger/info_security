@@ -1,13 +1,16 @@
+import json
 from django.shortcuts import render
 from django.views.generic import TemplateView
 from django.http import HttpResponse
 from . import forms
+from django.core import serializers
 from secretsmodules.models import Secret, UserProfile
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.core.exceptions import ValidationError
 from django.contrib.auth.password_validation import validate_password
 # Create your views here.
+
 
 def duplicate_mail(email):
     users = list(User.objects.filter(email = email))
@@ -16,9 +19,11 @@ def duplicate_mail(email):
     return False
 
 
+
 # Create your views here.
 class HomePageView(TemplateView):
     def get(self, request, **kwargs):
+
         secrets = Secret.objects.all()
         my_dict = {'all_secrets':secrets}
         return render(request, 'secretmodules/index.html', context=my_dict)
@@ -26,6 +31,18 @@ class DetailsView(TemplateView):
     def get(self, request, **kwargs):
 
         return HttpResponse(kwargs['id'])
+
+
+def add_to_cart(request, secret_id):
+    cart = request.session.get('cart', {})
+    secret = Secret.objects.get(pk=secret_id)
+    serialized_obj = serializers.serialize('json', [secret])
+    cart[len(cart)] = (serialized_obj)
+    request.session['cart'] = cart
+    my_cart = request.session['cart']
+    # need to change this because the action adds to cart every time
+    return render(request, 'secretmodules/cart.html', context=my_cart)
+
 
 class RegisterForm(TemplateView):
 

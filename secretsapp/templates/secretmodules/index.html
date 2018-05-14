@@ -1,15 +1,8 @@
-<<<<<<< HEAD
 <!DOCTYPE html>
 {% extends "secretmodules/base.html" %}
 {% load staticfiles %}
   {% block content %}
-=======
-<!-- templates/index.html -->
-{% extends 'secretmodules/base.html' %}
-{% load staticfiles %}
-    {% block content %}
-    <div class="container">
->>>>>>> be09e33f760c814f2b23a9390c612f71304de5d0
+
         <div class="row">
             {% if all_secrets %}
             <div class="col-lg-12">
@@ -27,12 +20,8 @@
                 <img src="{% static 'images/sandman.jpg' %}" height=100px>
                 {% endif %}
                 <br>
-<<<<<<< HEAD
-                <a class="btn btn-success buy-btn" href="#">
 
-=======
-                <a href="{% url 'add_to_cart' secret_id=secret.id %}">Add item</a>
->>>>>>> be09e33f760c814f2b23a9390c612f71304de5d0
+                <a href="{% url 'secretsmodules:add_to_cart' secret_id=secret.id %}">Add item</a>
                    Buy  {{secret.price }} $
                 </a>
                 <a class="btn btn-primary " href="{% url 'secretsmodules:details' id=secret.id %}">
@@ -45,9 +34,4 @@
             <h3>No Secrets Found</h3>
             {% endif %}
         </div>
-<<<<<<< HEAD
-   {% endblock %}
-=======
-    </div>
-{% endblock %}
->>>>>>> be09e33f760c814f2b23a9390c612f71304de5d0
+        {% endblock %}

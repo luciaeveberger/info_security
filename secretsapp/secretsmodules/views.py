@@ -34,14 +34,17 @@ class DetailsView(TemplateView):
 
 
 def add_to_cart(request, secret_id):
-    cart = request.session.get('cart', {})
-    secret = Secret.objects.get(pk=secret_id)
-    serialized_obj = serializers.serialize('json', [secret])
-    cart[len(cart)] = (serialized_obj)
-    request.session['cart'] = cart
-    my_cart = request.session['cart']
-    # need to change this because the action adds to cart every time
-    return render(request, 'secretmodules/cart.html', context=my_cart)
+    if request.user.is_authenticated:
+        cart = request.session.get('cart', {})
+        secret = Secret.objects.get(pk=secret_id)
+        serialized_obj = serializers.serialize('json', [secret])
+        cart[len(cart)] = (serialized_obj)
+        request.session['cart'] = cart
+        my_cart = request.session['cart']
+        # need to change this because the action adds to cart every time
+        return render(request, 'secretmodules/cart.html', context=my_cart)
+    else:
+        return HttpResponse('aa')
 
 
 class RegisterForm(TemplateView):

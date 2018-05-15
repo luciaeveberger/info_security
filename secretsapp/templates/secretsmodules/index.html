@@ -23,7 +23,7 @@
                 <a href="{% url 'secretsmodules:add_to_cart' secret_id=secret.id %}">Add item</a>
                    Buy  {{secret.price }} $
                 </a>
-                <a class="btn btn-primary " href="{% url 'secretsmodules:details' id=secret.id %}">
+                <a class="btn btn-primary " href="{% url 'secretsmodules:details' secret.id %}">
                   Details
                 </a>
             </div>

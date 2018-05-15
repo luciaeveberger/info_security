@@ -1,8 +1,9 @@
 import json
 from django.shortcuts import render
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, ListView, DetailView
 from django.http import HttpResponse, HttpResponseRedirect
 from . import forms
+from . import models
 from django.core import serializers
 from secretsmodules.models import Secret, UserProfile
 from django.contrib.auth.models import User
@@ -25,17 +26,28 @@ def duplicate_mail(email):
 
 
 # Create your views here.
-class HomePageView(TemplateView):
-    def get(self, request, **kwargs):
+# class HomePageView(TemplateView):
+#     template_name = 'secretsmodules/index.html'
+#     def get(self, request, **kwargs):
+#         secrets = Secret.objects.all()
+#         my_dict = {'all_secrets':secrets}
+#         return render(request, 'secretsmodules/index.html', context=my_dict)
+# class HomePageView(TemplateView):
+#     template_name = 'secretsmodules/index.html'
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         secrets = Secret.objects.all()
+#         context['all_secrets'] = secrets
+#         return context
+class HomePageView(ListView):
+    template_name = 'secretsmodules/index.html'
+    context_object_name = 'all_secrets'  #default: objectname_list
+    model = models.Secret
 
-        secrets = Secret.objects.all()
-        my_dict = {'all_secrets':secrets}
-        return render(request, 'secretsmodules/index.html', context=my_dict)
-
-class DetailsView(TemplateView):
-    def get(self, request, **kwargs):
-
-        return HttpResponse(kwargs['id'])
+class DetailsView(DetailView):
+    model = models.Secret
+    template_name = 'secretsmodules/details.html'
+    context_object_name = 'secret'    #default: objectname.
 
 
 def add_to_cart(request, secret_id):

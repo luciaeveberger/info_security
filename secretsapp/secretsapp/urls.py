@@ -8,6 +8,9 @@ from django.conf.urls.static import static
 urlpatterns = [
     # url(r'^secretsmodules/', include('secretsmodules.urls')),
     url(r'^admin/', admin.site.urls),
+    url(r'^$', views.HomePageView.as_view(), name = 'index'),
+    url(r'^logout/$', views.user_logout, name='logout'),
+    url(r'^login/$', views.LoginForm.as_view(), name='login'),
     url(r'^', include('secretsmodules.urls')),
 ]
 if settings.DEBUG is True:

@@ -23,22 +23,6 @@ def duplicate_mail(email):
         return True
     return False
 
-
-
-# Create your views here.
-# class HomePageView(TemplateView):
-#     template_name = 'secretsmodules/index.html'
-#     def get(self, request, **kwargs):
-#         secrets = Secret.objects.all()
-#         my_dict = {'all_secrets':secrets}
-#         return render(request, 'secretsmodules/index.html', context=my_dict)
-# class HomePageView(TemplateView):
-#     template_name = 'secretsmodules/index.html'
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         secrets = Secret.objects.all()
-#         context['all_secrets'] = secrets
-#         return context
 class HomePageView(ListView):
     template_name = 'secretsmodules/index.html'
     context_object_name = 'all_secrets'  #default: objectname_list
@@ -52,13 +36,16 @@ class DetailsView(DetailView):
 
 def add_to_cart(request, secret_id):
     if request.user.is_authenticated:
-        cart = request.session.get('cart', {})
+        cart = request.session.get('cart', dict())
         secret = Secret.objects.get(pk=secret_id)
         serialized_obj = serializers.serialize('json', [secret])
-        cart[len(cart)] = (serialized_obj)
+        # if item already in cart
+        if secret_id in cart:
+            cart[secret_id]['quantity'] = cart[secret_id]['quantity'] + 1
+        else:
+            cart[secret_id] = {"secret": serialized_obj, "quantity":1}
         request.session['cart'] = cart
         my_cart = request.session['cart']
-        # need to change this because the action adds to cart every time
         return render(request, 'secretsmodules/cart.html', context=my_cart)
     else:
         return HttpResponseRedirect(reverse('login'))

@@ -2,40 +2,44 @@
 {% load staticfiles %}
 <html>
     <head>
-        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+        <!--<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">-->
         <link rel="stylesheet" href="{% static 'css/styles.css' %}"\>
         <meta charset="utf-8">
         <title>Howdy!</title>
     </head>
     <body>
-    <nav class="navbar navbar-inverse">
-      <div class="container-fluid">
-        <div class="navbar-header">
-          <a class="navbar-brand" href="#"><i> Secrets </i></a>
+        <div class="card text-center">
+            <div class="card-header">
+                <ul class="nav nav-tabs card-header-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link " href="/"><i>Secrets </i></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/">Home</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">MyCart</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'secretsmodules:register' %}">Register</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">Login</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
         </div>
-        <ul class="nav navbar-nav">
-          <li class="active"><a href="/">Home</a></li>
-
-
-
-          {% if user.is_authenticated %}
-
-          <li><a href="#"> My cart</a></li>
-          <li><a href="{% url 'logout' %}">Logout</a></li>
-          {% else %}
-
-          <li><a href="{% url 'secretsmodules:register' %}">Register</a></li>
-            <li><a href="{% url 'login' %}">Login</a></li>
-          {% endif %}
-
-        </ul>
-      </div>
-    </nav>
-
-      <div class="container">
-    {% block content %}
-    {% endblock %}
-    </div>
-
+        <div class="card-body">
+            <div class="container">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
     </body>

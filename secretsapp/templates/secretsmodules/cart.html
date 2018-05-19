@@ -1,22 +1,38 @@
 {% extends 'secretsmodules/base.html' %}
-    {% block content %}
+{% block content %}
 <div>
-    <h1> Cart details </h1>
-    <div class="btn-group" role="group" aria-label="Basic example">
+   <h1> Cart details </h1>
+   <div class="btn-group" role="group" aria-label="Basic example">
       <button type="button" class="btn btn-secondary">Checkout now</button>
       <button type="button" class="btn btn-secondary">keep shopping</button>
-    </div>
-    {{request.session.cart}}
-     <div class="container">
-        <div class="row">
-            {% for item in request.session.cart %}
-            <div class='col-lg-3 col-md-4 col-sm-6 col-xs-12 secret-entry' >
-                        <h4>
-                        {{request.session.cart.item.fields.title}}
-                        </h4>
-            </div>
-            {% endfor %}
-        </div>
-     </div>
+   </div>
+   <div class="container">
+      <div class="row">
+         <table class="table  table-striped">
+            <thead>
+               <tr>
+                  <th scope="col">Secret Title</th>
+                  <th scope="col">Secret Quantity</th>
+                  <th scope="col">Secret Price</th>
+                  <th scope="col">Checkout</th>
+                  <th scope="col">Remove</th>
+               </tr>
+            </thead>
+            <tbody>
+               {% for key, value in request.session.cart.items %}
+               <tr>
+                  <td>
+                     {{ value.secret}}
+                  </td>
+                  <td> {{value.quantity}}</td>
+                  <td> {{value.price}}</td>
+                  <td> <button type="button" class="btn btn-success">Checkout</button></td>
+                  <td> <button type="button" class="btn btn-warning">Remove</button></td>
+               </tr>
+               {% endfor %}
+            </tbody>
+         </table>
+      </div>
+   </div>
 </div>
 {% endblock %}

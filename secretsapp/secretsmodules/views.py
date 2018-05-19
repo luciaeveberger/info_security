@@ -34,19 +34,22 @@ class DetailsView(DetailView):
     context_object_name = 'secret'    #default: objectname.
 
 
+def get_cart(request):
+    cart = request.session.get('cart', dict())
+    return render(request, 'secretsmodules/cart.html')
+
+
 def add_to_cart(request, secret_id):
     if request.user.is_authenticated:
         cart = request.session.get('cart', dict())
-        secret = Secret.objects.get(pk=secret_id)
-        serialized_obj = serializers.serialize('json', [secret])
+        secret = Secret.objects.filter(pk=secret_id).values()[0]
         # if item already in cart
         if secret_id in cart:
             cart[secret_id]['quantity'] = cart[secret_id]['quantity'] + 1
         else:
-            cart[secret_id] = {"secret": serialized_obj, "quantity":1}
+            cart[secret_id] = {"secret": secret['title'], "quantity": 1, "price": float(secret['price'])}
         request.session['cart'] = cart
-        my_cart = request.session['cart']
-        return render(request, 'secretsmodules/cart.html', context=my_cart)
+        return redirect('/cart')
     else:
         return HttpResponseRedirect(reverse('login'))
 

@@ -5,6 +5,9 @@ body{
   border: 1px solid black;
   margin-top: 50px;
 }
+.detail_button{
+    color: white !important;
+}
 
 .buy-btn{
   position: absolute;

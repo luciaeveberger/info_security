@@ -9,4 +9,5 @@ urlpatterns = [
     url(r'^add_to_cart/(?P<secret_id>[0-9]+)$', views.add_to_cart, name='add_to_cart'),
     url(r'^register/$',views.RegisterForm.as_view(), name='register'),
     url('cart/', views.get_cart, name='cart'),
+    url(r'^checkout/$', views.CheckoutView.as_view(), name='checkout'),
 ]

@@ -5,7 +5,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from . import forms
 from . import models
 from django.core import serializers
-from secretsmodules.models import Secret, UserProfile
+from secretsmodules.models import Secret, UserProfile, PurchasedItem
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.core.exceptions import ValidationError
@@ -52,6 +52,29 @@ def add_to_cart(request, secret_id):
         return redirect('/cart')
     else:
         return HttpResponseRedirect(reverse('login'))
+
+
+class CheckoutView(TemplateView):
+    def get(self, request, **kwargs):
+        return render(request, 'secretsmodules/checkout.html')
+    def post(self, request, **kwargs):
+        address = request.POST.get('address')
+        password = request.POST.get('password')
+        botcarcher = request.POST.get('bctch')
+        if len(botcarcher) > 0:
+            return HttpResponse('Bot caught!') #here we must implement captcha
+        for sesskey in request.session.keys():
+            del request.session[sesskey]
+        user = authenticate(username = username, password = password)
+        if user:
+            if user.is_active:
+                login(request=request, user=user)
+                return HttpResponseRedirect(reverse('index'))
+            else:
+                return HttpResponse('User not active')
+        else:
+            return HttpResponse('invalid login details')
+
 
 
 class RegisterForm(TemplateView):

@@ -20,10 +20,9 @@
         <a href="{% url 'secretsmodules:add_to_cart' secret_id=secret.id %}">Add item</a>
         Buy  {{secret.price }} $
         </a>
-        <button type="button" class="btn btn-primary"> <a class="detail_button" href="{% url 'secretsmodules:details' secret.id %}">
+        <a class="detail_button btn btn-primary" href="{% url 'secretsmodules:details' secret.id %}">
         Details
         </a>
-        </button>
     </div>
     {% endfor %}
 </div>

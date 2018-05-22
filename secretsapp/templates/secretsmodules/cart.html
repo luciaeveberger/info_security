@@ -3,8 +3,8 @@
 <div>
    <h1> Cart details </h1>
    <div class="btn-group" role="group" aria-label="Basic example">
-      <a class="btn btn-secondary" href="/checkout"> Checkout now </a>
-      <a class="btn btn-secondary" href="/"> keep shopping </a>
+      <a class="btn btn-primary" href="/checkout"> CHECKOUT NOW </a>
+      <a class="btn btn-secondary" href="/"> KEEP SHOPPING </a>
    </div>
    <div class="container">
       <div class="row">
@@ -14,7 +14,6 @@
                   <th scope="col">Secret Title</th>
                   <th scope="col">Secret Quantity</th>
                   <th scope="col">Secret Price</th>
-                  <th scope="col">Checkout</th>
                   <th scope="col">Remove</th>
                </tr>
             </thead>
@@ -26,7 +25,7 @@
                   </td>
                   <td> {{value.quantity}}</td>
                   <td> {{value.price}}</td>
-                  <td> <button type="button" class="btn btn-success">Checkout</button></td>
+
                   <td> <button type="button" class="btn btn-warning">Remove</button></td>
                </tr>
                {% endfor %}

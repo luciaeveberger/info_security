@@ -54,26 +54,23 @@ def add_to_cart(request, secret_id):
         return HttpResponseRedirect(reverse('login'))
 
 
+def remove_from_cart(request, secret_id):
+    cart = request.session.get('cart', dict())
+    cart.pop(secret_id, None)
+    request.session['cart'] = cart
+    return redirect('/cart')
+
+
 class CheckoutView(TemplateView):
     def get(self, request, **kwargs):
         return render(request, 'secretsmodules/checkout.html')
     def post(self, request, **kwargs):
         address = request.POST.get('address')
-        password = request.POST.get('password')
-        botcarcher = request.POST.get('bctch')
-        if len(botcarcher) > 0:
-            return HttpResponse('Bot caught!') #here we must implement captcha
-        for sesskey in request.session.keys():
-            del request.session[sesskey]
-        user = authenticate(username = username, password = password)
-        if user:
-            if user.is_active:
-                login(request=request, user=user)
-                return HttpResponseRedirect(reverse('index'))
-            else:
-                return HttpResponse('User not active')
-        else:
-            return HttpResponse('invalid login details')
+        name = request.POST.get('name')
+        card_number = request.POST.get('card_number')
+        print(name)
+        return render(request, 'secretsmodules/checkout_finished.html')
+
 
 
 

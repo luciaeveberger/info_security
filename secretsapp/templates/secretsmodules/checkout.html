@@ -8,18 +8,16 @@
         <form class="" action="" method="post">
             {% csrf_token %}
             <label for="name">name</label>
-            <input class="" type="text" name="name" value="" required>
+            <input type="text" name="name" value="" required>
             <br>
             <label for="address">address</label>
-            <input type="address" name="address" value="" required>
+            <input type="text" name="address" value="" required>
             <br>
-           <label for="card_details">card details </label>
-            <input type="card_details" name="card_details" value="" required>
+           <label for="card_number">card details </label>
+            <input type="number" name="card_number" value="" required>
             <br>
-            <input type="hidden" name = "bctch">
             <input type="submit" class='btn btn-primary' value="Pay now">
             <a href="/"> keep shopping </a>
         </form>
     </div>
-
 {% endblock %}

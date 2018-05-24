@@ -2,6 +2,10 @@
 {% block content %}
 <div>
    <h1> Cart details </h1>
+      {% if not request.session.cart %}
+        <h6> Your cart is empty </h6>
+        <a class="btn btn-secondary" href="/"> KEEP SHOPPING </a>
+    {% else %}
    <div class="btn-group" role="group" aria-label="Basic example">
       <a class="btn btn-primary" href="/checkout"> CHECKOUT NOW </a>
       <a class="btn btn-secondary" href="/"> KEEP SHOPPING </a>
@@ -12,21 +16,21 @@
             <thead>
                <tr>
                   <th scope="col">Secret Title</th>
-                  <th scope="col">Secret Quantity</th>
                   <th scope="col">Secret Price</th>
                   <th scope="col">Remove</th>
                </tr>
             </thead>
-            <tbody>
+
+             <tbody>
                {% for key, value in request.session.cart.items %}
                <tr>
                   <td>
                      {{ value.secret}}
                   </td>
-                  <td> {{value.quantity}}</td>
+
                   <td> {{value.price}}</td>
 
-                  <td> <button type="button" class="btn btn-warning">Remove</button></td>
+                  <td> <a class="btn btn-warning" href="{% url 'secretsmodules:remove_from_cart' secret_id=key %}">Remove</a></td>
                </tr>
                {% endfor %}
             </tbody>
@@ -34,4 +38,5 @@
       </div>
    </div>
 </div>
+{% endif %}
 {% endblock %}

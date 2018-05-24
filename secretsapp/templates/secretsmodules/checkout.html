@@ -2,9 +2,9 @@
 {% block content %}
 <div>
    <h1>Checkout </h1>
+    <h4>Total Price: $ {{total_order}}</h4>
    <h6> Enter payment details below:</h6>
     <div class="jumbotron">
-        {{request.session.cart}}
         <form class="" action="" method="post">
             {% csrf_token %}
             <label for="name">name</label>

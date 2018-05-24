@@ -63,7 +63,11 @@ def remove_from_cart(request, secret_id):
 
 class CheckoutView(TemplateView):
     def get(self, request, **kwargs):
-        return render(request, 'secretsmodules/checkout.html')
+        cart = request.session.get('cart', dict())
+        total_order = 0
+        for key in cart:
+            total_order = total_order + (cart[key]['price'])
+        return render(request, 'secretsmodules/checkout.html', context={"total_order": total_order})
     def post(self, request, **kwargs):
         address = request.POST.get('address')
         name = request.POST.get('name')

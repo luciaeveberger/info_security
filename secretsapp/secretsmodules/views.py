@@ -120,7 +120,7 @@ class RegisterForm(TemplateView):
             except Exception as e:
                 form.add_error(field = None, error = "Unspecified Integrity error, try again later" )
                 return render(request, 'secretsmodules/register.html', context={'form': form})
-            profile = UserProfile(user = user, address = data['address'], phone = data['phone'])
+            profile = UserProfile(user = user, address = data['address'], phone = data['phone'], balance = 0)
             profile.save()
 
             login(request=request,user=user)

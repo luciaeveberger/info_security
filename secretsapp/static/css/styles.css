@@ -4,11 +4,18 @@ body{
   min-height: 400px;
   border: 1px solid black;
   margin-top: 50px;
+  word-wrap: break-word;
 }
 .detail_button{
     color: white !important;
 }
+.entry-img{
 
+}
+.entry-img img{
+  max-width: 100%;
+  max-height: 100%;
+}
 .buy-btn{
   position: absolute;
   bottom: 0px;

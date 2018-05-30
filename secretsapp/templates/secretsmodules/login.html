@@ -2,14 +2,15 @@
   {% block content %}
 
 
-
-
-
-
-
     <div class="jumbotron">
       <form action="" method="post">
           {% csrf_token %}
+        {% if error %}
+        <div class="alert alert-danger text-center">
+            {{ error }} {{ request.session.LoginFailed }}
+        </div>
+        {% endif %}
+
         <div class="form-group row">
           <label for="username" class="col-sm-2 col-form-label">Username</label>
           <div class="col-sm-10">
@@ -23,6 +24,15 @@
           </div>
             <input type="hidden" name = "bctch">
         </div>
+        {% if captcha %}
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label">Prove you're human</label>
+          <div class="col-sm-10">
+            <div class="g-recaptcha" data-sitekey="6LdnVVwUAAAAADTpG9rKVlKsOnErKFyMwqbPAEvp"></div>
+          </div>
+        </div>
+
+        {% endif %}
 
         <div class="form-group row">
           <div class="offset-sm-2 col-sm-10">

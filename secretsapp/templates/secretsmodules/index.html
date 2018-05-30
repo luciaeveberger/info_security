@@ -11,13 +11,16 @@
         <div class="" style="min-height: 150px">
             {{secret.description}}
         </div>
-        {% if secret.picture %}
-        <img src="{{ secret.picture.url }}" alt="Error" height=100px>
-        {% else %}
-        <img src="{% static 'images/sandman.jpg' %}" height=100px>
-        {% endif %}
+        <div class="entry-img">
+          {% if secret.picture %}
+          <img src="{{ secret.picture.url }}" alt="Error">
+          {% else %}
+          <img src="{% static 'images/sandman.jpg' %}">
+          {% endif %}
+        </div>
+
         <br>
-        <a href="{% url 'secretsmodules:add_to_cart' secret_id=secret.id %}">Add item</a>
+        <a class="btn btn-success" href="{% url 'secretsmodules:add_to_cart' secret_id=secret.id %}">Add item</a>
         Buy  {{secret.price }} $
         </a>
         <a class="detail_button btn btn-primary" href="{% url 'secretsmodules:details' secret.id %}">

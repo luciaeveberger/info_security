@@ -14,6 +14,10 @@ from django.shortcuts import redirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
+import urllib
+from django.conf import settings
+from django.contrib import messages
+
 # Create your views here.
 
 
@@ -26,6 +30,7 @@ def duplicate_mail(email):
 class HomePageView(ListView):
     template_name = 'secretsmodules/index.html'
     context_object_name = 'all_secrets'  #default: objectname_list
+    ordering = ['-date']
     model = models.Secret
 
 class DetailsView(DetailView):
@@ -133,16 +138,43 @@ class LoginForm(TemplateView):
         botcarcher = request.POST.get('bctch')
         if len(botcarcher) > 0:
             return HttpResponse('Bot caught!') #here we must implement captcha
-        for sesskey in request.session.keys():
-            del request.session[sesskey]
+        failed_attemts = request.session.get("FailedLogin", 0)
+        if failed_attemts >=3:
+            recaptcha_response = request.POST.get('g-recaptcha-response')
+            url = 'https://www.google.com/recaptcha/api/siteverify'
+            values = {
+                'secret': settings.GOOGLE_RECAPTCHA_SECRET_KEY,
+                'response': recaptcha_response
+            }
+            data = urllib.parse.urlencode(values).encode()
+            req =  urllib.request.Request(url, data=data)
+            response = urllib.request.urlopen(req)
+            result = json.loads(response.read().decode())
+            ''' End reCAPTCHA validation '''
+
+            if result['success']:
+                request.session["FailedLogin"] = 0
+            elif failed_attemts == 3:
+                request.session["FailedLogin"] +=1
+                return render(request, 'secretsmodules/login.html', context={'captcha': True, "error":"user not found"})
+            else:
+                request.session["FailedLogin"] +=1
+                return render(request, 'secretsmodules/login.html', context={'captcha': True, "error":"captcha validation failed"})
         user = authenticate(username = username, password = password)
         if user:
             if user.is_active:
                 login(request=request, user=user)
+
                 return HttpResponseRedirect(reverse('index'))
             else:
                 return HttpResponse('User not active')
         else:
+            if failed_attemts == 0:
+                request.session["FailedLogin"] = 1
+                return render(request, 'secretsmodules/login.html', context={"error":"user not found"})
+            else:
+                request.session["FailedLogin"] +=1
+                return render(request, 'secretsmodules/login.html', context={"error":"user not found"})
             return HttpResponse('invalid login details')
 
 

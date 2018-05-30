@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from decimal import Decimal
 # Create your models here.
 
 class Country(models.Model):
@@ -25,6 +26,7 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     address = models.CharField(max_length = 264, unique = False, blank = True)
     phone = models.CharField(max_length = 20,  blank = True)
+    balance = models.DecimalField(max_digits=20,decimal_places=2,default=Decimal('10000.00'))
 
 
 class Cart(models.Model):

@@ -13,6 +13,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import authenticate, login, logout
 import urllib
 from django.conf import settings
@@ -38,12 +39,12 @@ class DetailsView(DetailView):
     template_name = 'secretsmodules/details.html'
     context_object_name = 'secret'    #default: objectname.
 
-
+@login_required
 def get_cart(request):
     cart = request.session.get('cart', dict())
     return render(request, 'secretsmodules/cart.html')
 
-
+@login_required
 def add_to_cart(request, secret_id):
     if request.user.is_authenticated:
         cart = request.session.get('cart', dict())
@@ -58,7 +59,7 @@ def add_to_cart(request, secret_id):
     else:
         return HttpResponseRedirect(reverse('login'))
 
-
+@login_required
 def remove_from_cart(request, secret_id):
     cart = request.session.get('cart', dict())
     cart.pop(secret_id, None)
@@ -66,7 +67,7 @@ def remove_from_cart(request, secret_id):
     return redirect('/cart')
 
 
-class CheckoutView(TemplateView):
+class CheckoutView(LoginRequiredMixin,TemplateView):
     def get(self, request, **kwargs):
         cart = request.session.get('cart', dict())
         total_order = 0
@@ -91,6 +92,8 @@ class RegisterForm(TemplateView):
         form = forms.UserForm()
         return render(request, 'secretsmodules/register.html', context={'form': form})
     def post(self, request, **kwargs):
+        if request.user.is_authenticated:
+            return redirect('/')
         form = forms.UserForm(request.POST)
         if form.is_valid():
 
@@ -131,6 +134,8 @@ class RegisterForm(TemplateView):
 
 class LoginForm(TemplateView):
     def get(self, request, **kwargs):
+        if request.user.is_authenticated:
+            return redirect('/')
         return render(request, 'secretsmodules/login.html')
     def post(self, request, **kwargs):
         username = request.POST.get('username')

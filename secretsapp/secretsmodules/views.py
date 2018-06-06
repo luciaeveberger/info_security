@@ -1,11 +1,12 @@
 import json
+import datetime
 from django.shortcuts import render
 from django.views.generic import TemplateView, ListView, DetailView
 from django.http import HttpResponse, HttpResponseRedirect
 from . import forms
 from . import models
 from django.core import serializers
-from secretsmodules.models import Secret, UserProfile, PurchasedItem
+from secretsmodules.models import Secret, UserProfile, PurchasedItem, Cart
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.core.exceptions import ValidationError
@@ -75,17 +76,16 @@ class CheckoutView(LoginRequiredMixin,TemplateView):
             total_order = total_order + (cart[key]['price'])
         return render(request, 'secretsmodules/checkout.html', context={"total_order": total_order})
     def post(self, request, **kwargs):
-        address = request.POST.get('address')
-        name = request.POST.get('name')
-        card_number = request.POST.get('card_number')
-        print(name)
+        cart = request.session.get('cart')
+        for key in cart:
+            cart_item = Cart(user=UserProfile(request.user), purchase_date=datetime.datetime.now())
+            purchased_item = PurchasedItem(cart=cart_item, secret=Secret.objects.get(pk=key), purchased_price=100)
         return render(request, 'secretsmodules/checkout_finished.html')
 
 
 
 
 class RegisterForm(TemplateView):
-
     def get(self, request, **kwargs):
         if request.user.is_authenticated:
             return redirect('/')

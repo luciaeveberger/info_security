@@ -29,6 +29,9 @@
         <li class="nav-item">
             <a class="nav-link" href="/cart">MyCart ({{request.session.cart.items|length}})</a>
         </li>
+         <li class="nav-item">
+            <a class="nav-link" href="/user_secrets">MySecrets</a>
+        </li>
         <li class="nav-item">
             <a class="nav-link" href="{% url 'logout' %}">Logout</a>
         </li>

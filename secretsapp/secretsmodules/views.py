@@ -47,6 +47,18 @@ def get_cart(request):
     return render(request, 'secretsmodules/cart.html')
 
 @login_required
+def get_user_secrets(request):
+    profile = UserProfile.objects.get(id=request.user.id)
+    purchased_items = Cart.objects.filter(user_id=profile).values()
+    user_purchased = list()
+    # group by basket
+    for value in purchased_items:
+        item = PurchasedItem.objects.get(cart_id=value['id']).__dict__
+        secret_dict = {"secret": Secret.objects.filter(pk=item['secret_id']).values()[0]}
+        user_purchased.append(secret_dict)
+    return render(request, 'secretsmodules/user_secrets.html', context={'user_purchased': user_purchased})
+
+@login_required
 def add_to_cart(request, secret_id):
     if request.user.is_authenticated:
         cart = request.session.get('cart', dict())
@@ -94,7 +106,7 @@ class CheckoutView(LoginRequiredMixin,TemplateView):
                 profile.balance = Decimal(balance)
                 profile.save()
         request.session['cart'] = dict()
-        return render(request, 'secretsmodules/checkout_finished.html')
+        return render(request, 'secretsmodules/checkout_finished.html', context={"current_balance": profile.balance})
 
 
 

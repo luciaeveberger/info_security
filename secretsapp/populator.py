@@ -13,7 +13,7 @@ from faker import Faker
 from django.contrib.auth.models import User
 from django.core.files import File
 import string
-
+from django.db.models import Q
 fakegen = Faker()
 
 def random_string_generator(size=10, chars=string.ascii_lowercase + string.digits):
@@ -77,6 +77,15 @@ def add_carts(n):
             secret = secrets[random.randint(0, len(secrets)-1)]
             item = PurchasedItem(cart = cart, secret = secret, purchased_price = secret.price)
             item.save()
+def replace_images(secrets):
+    dir = os.path.join(os.getcwd(),'tempdata','images')
+    images = [os.path.join(dir,x) for x in os.listdir(dir)]
+    for item in secrets:
+        imagePath = images[random.randint(0,len(images)-1)] #I don't know how to save it programically, doing empty for now
+        f = open(imagePath,'rb')
+        img =File(f)
+        item.picture.save(random_string_generator(size = 32)+'.jpg',img,True)
+        item.save()
 
 if __name__ == '__main__':
     add_countries()

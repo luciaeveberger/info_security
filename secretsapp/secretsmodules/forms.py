@@ -5,18 +5,24 @@ class UserForm(forms.Form):
     username = forms.CharField(widget = forms.TextInput(
         attrs = {
             'class' : 'form-control',
-            'placeholder' : 'johndoe',
+            'placeholder' : 'e.g johndoe',
+            'pattern': '[A-Za-z0-9_]{3,20}',
+            'title': 'alphanumeric symbols or underscore between 3 and 20 characters'
         })
     )
     first_name = forms.CharField(widget = forms.TextInput(
         attrs = {
             'class' : 'form-control',
             'placeholder' : 'e.g. John',
+            'pattern': '([^\s][A-zÀ-ž\s]+)',
+            'title': 'Alphabet symbols and spaces only'
         }))
     last_name = forms.CharField(widget = forms.TextInput(
         attrs = {
             'class' : 'form-control',
             'placeholder' : 'e.g. Doe',
+            'pattern': '([^\s][A-zÀ-ž\s]+)',
+            'title': 'Alphabet symbols and spaces only'
         }))
     email = forms.EmailField(widget = forms.EmailInput(
         attrs = {

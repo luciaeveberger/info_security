@@ -48,8 +48,9 @@ def get_cart(request):
 
 @login_required
 def get_user_secrets(request):
-    profile = UserProfile.objects.get(id=request.user.id)
-    purchased_items = Cart.objects.filter(user_id=profile).values()
+    profile = UserProfile.objects.get(user = request.user)
+    print(profile)
+    purchased_items = Cart.objects.filter(user_id=profile.pk).values()
     user_purchased = list()
     # group by basket
     for value in purchased_items:
@@ -84,14 +85,14 @@ class CheckoutView(LoginRequiredMixin,TemplateView):
     def get(self, request, **kwargs):
         cart = request.session.get('cart', dict())
         total_order = 0
-        profile = UserProfile.objects.get(id=request.user.id)
+        profile = UserProfile.objects.get(user=request.user)
         balance = profile.balance
         for key in cart:
             total_order = total_order + (cart[key]['price'])
         return render(request, 'secretsmodules/checkout.html', context={"total_order": total_order, "balance": balance})
     def post(self, request, **kwargs):
         cart = request.session.get('cart')
-        profile = UserProfile.objects.get(id=request.user.id)
+        profile = UserProfile.objects.get(user=request.user)
         for key in cart:
             item_price = cart[key]['price']
             balance = float(profile.balance) - item_price
@@ -149,8 +150,16 @@ class RegisterForm(TemplateView):
             except Exception as e:
                 form.add_error(field = None, error = "Unspecified Integrity error, try again later" )
                 return render(request, 'secretsmodules/register.html', context={'form': form})
-            profile = UserProfile(user = user, address = data['address'], phone = data['phone'], balance = 0)
-            profile.save()
+            try:
+                profile = UserProfile(user = user, address = data['address'], phone = data['phone'], balance = 0)
+                profile.save()
+            except Exception as ex:
+                print(ex)
+            if profile.pk is None:
+                user.delete()
+                form.add_error(field = None, error = "Error registering, try again later." )
+                return render(request, 'secretsmodules/register.html', context={'form': form})
+
 
             login(request=request,user=user)
             return HttpResponseRedirect(reverse('index'))   #change later to profile page

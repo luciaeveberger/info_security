@@ -2,22 +2,17 @@
 {% block content %}
 <div>
    <h1>Checkout </h1>
-    <h4>Total Price: $ {{total_order}}</h4>
-   <h6> Enter payment details below:</h6>
     <div class="jumbotron">
+        <h4>Total Price: $ {{ total_order }}</h4>
+        <h6> Your balance: $ {{ balance }}  </h6>
+        {% if balance > total_order %}
         <form class="" action="" method="post">
             {% csrf_token %}
-            <label for="name">name</label>
-            <input type="text" name="name" value="" required>
-            <br>
-            <label for="address">address</label>
-            <input type="text" name="address" value="" required>
-            <br>
-           <label for="card_number">card details </label>
-            <input type="number" name="card_number" value="" required>
-            <br>
             <input type="submit" class='btn btn-primary' value="Pay now">
             <a href="/"> keep shopping </a>
         </form>
+        {% elif balance < total_order %}
+        <h6> Insufficent balance </h6>
     </div>
+{% endif %}
 {% endblock %}

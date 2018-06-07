@@ -1,5 +1,6 @@
 import json
 import datetime
+from decimal import *
 from django.shortcuts import render
 from django.views.generic import TemplateView, ListView, DetailView
 from django.http import HttpResponse, HttpResponseRedirect
@@ -67,19 +68,32 @@ def remove_from_cart(request, secret_id):
     request.session['cart'] = cart
     return redirect('/cart')
 
-
 class CheckoutView(LoginRequiredMixin,TemplateView):
     def get(self, request, **kwargs):
         cart = request.session.get('cart', dict())
         total_order = 0
+        profile = UserProfile.objects.get(id=request.user.id)
+        balance = profile.balance
         for key in cart:
             total_order = total_order + (cart[key]['price'])
-        return render(request, 'secretsmodules/checkout.html', context={"total_order": total_order})
+        return render(request, 'secretsmodules/checkout.html', context={"total_order": total_order, "balance": balance})
     def post(self, request, **kwargs):
         cart = request.session.get('cart')
+        profile = UserProfile.objects.get(id=request.user.id)
         for key in cart:
-            cart_item = Cart(user=UserProfile(request.user), purchase_date=datetime.datetime.now())
-            purchased_item = PurchasedItem(cart=cart_item, secret=Secret.objects.get(pk=key), purchased_price=100)
+            item_price = cart[key]['price']
+            balance = float(profile.balance) - item_price
+            if balance < 0:
+                return
+            else:
+                secret = Secret.objects.get(pk=key)
+                cart_item = Cart(user=profile, purchase_date=datetime.datetime.now())
+                cart_item.save()
+                purchased_item = PurchasedItem(cart=cart_item, secret=secret, purchased_price=item_price)
+                purchased_item.save()
+                profile.balance = Decimal(balance)
+                profile.save()
+        request.session['cart'] = dict()
         return render(request, 'secretsmodules/checkout_finished.html')
 
 

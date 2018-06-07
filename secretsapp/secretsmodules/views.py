@@ -1,6 +1,7 @@
 import json
 import datetime
 from decimal import *
+from operator import itemgetter
 from django.shortcuts import render
 from django.views.generic import TemplateView, ListView, DetailView
 from django.http import HttpResponse, HttpResponseRedirect
@@ -48,15 +49,19 @@ def get_cart(request):
 
 @login_required
 def get_user_secrets(request):
-    profile = UserProfile.objects.get(user = request.user)
+    profile = UserProfile.objects.get(user=request.user)
     print(profile)
     purchased_items = Cart.objects.filter(user_id=profile.pk).values()
     user_purchased = list()
     # group by basket
     for value in purchased_items:
         item = PurchasedItem.objects.get(cart_id=value['id']).__dict__
-        secret_dict = {"secret": Secret.objects.filter(pk=item['secret_id']).values()[0]}
+        secret_dict = {"secret": Secret.objects.filter(pk=item['secret_id']).values()[0],
+                       "purchase_date": value['purchase_date']}
         user_purchased.append(secret_dict)
+
+    # sort by latest key
+    user_purchased.sort(key=itemgetter('purchase_date'), reverse=True)
     return render(request, 'secretsmodules/user_secrets.html', context={'user_purchased': user_purchased})
 
 @login_required

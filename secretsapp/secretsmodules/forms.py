@@ -1,5 +1,7 @@
 from django import forms
 from django.core import validators
+from django.contrib.auth import get_user_model
+from . import models
 
 class UserForm(forms.Form):
     username = forms.CharField(widget = forms.TextInput(
@@ -67,3 +69,46 @@ class UserForm(forms.Form):
     #     if len(botcatcher) > 0:
     #         raise forms.ValidationError("Bot caught")
     #     return botcatcher
+
+
+class UserEditForm(forms.ModelForm):
+
+    class Meta():
+        fields = ('first_name','last_name')
+        model = get_user_model()
+        widgets = {
+
+                'first_name' : forms.TextInput(
+                        attrs = {
+                            'class' : 'form-control',
+                            'placeholder' : 'e.g. John',
+                            'pattern': '([^\s][A-zÀ-ž\s]+)',
+                            'title': 'Alphabet symbols and spaces only'
+                        }),
+                'last_name' : forms.TextInput(
+                        attrs = {
+                            'class' : 'form-control',
+                            'placeholder' : 'e.g. Doe',
+                            'pattern': '([^\s][A-zÀ-ž\s]+)',
+                            'title': 'Alphabet symbols and spaces only'
+                        }),                
+        }
+
+
+class ProfileEditForm(forms.ModelForm):
+    class Meta():
+        model = models.UserProfile
+        fields =  ('phone','address')
+        widgets = {
+            'phone': forms.TextInput(
+                attrs = {
+                    'class' : 'form-control',
+                    'placeholder' : 'e.g. 555 555 555 555',
+                }),
+            'address' : forms.TextInput(
+                attrs = {
+                    'class' : 'form-control',
+                    'placeholder' : 'e.g. Embassy of Ecuador, London',
+                }),
+
+        }

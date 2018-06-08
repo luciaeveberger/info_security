@@ -13,10 +13,10 @@ from django.db import IntegrityError
 from django.core.exceptions import ValidationError
 from django.contrib.auth.password_validation import validate_password
 from django.shortcuts import redirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, get_user_model
 import urllib
 from django.conf import settings
 from django.contrib import messages
@@ -167,7 +167,7 @@ class RegisterForm(TemplateView):
             return render(request, 'secretsmodules/register.html', context={'form': form})
 
 
-class LoginForm(TemplateView):
+class LoginForm(LoginRequiredMixin, TemplateView):
     def get(self, request, **kwargs):
         if request.user.is_authenticated:
             return redirect('/')
@@ -216,6 +216,28 @@ class LoginForm(TemplateView):
                 request.session["FailedLogin"] +=1
                 return render(request, 'secretsmodules/login.html', context={"error":"user not found"})
             return HttpResponse('invalid login details')
+
+class EditProfile(LoginRequiredMixin, TemplateView):
+    def get(self, request, **kwargs):
+
+        user_form = forms.UserEditForm(instance=request.user)
+        profile_form = forms.ProfileEditForm(instance = request.user.profile)
+        return render(request, 'secretsmodules/profile.html', context={'user_form': user_form, 'profile_form': profile_form})
+    def post(self, request, **kwargs):
+        my_context = dict()
+        user_form = forms.UserEditForm(request.POST, instance=request.user)
+        profile_form = forms.ProfileEditForm(request.POST, instance=request.user.profile)
+        my_context['user_form'] = user_form
+        my_context['profile_form'] = profile_form
+
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            my_context['success'] = True
+
+
+        return render(request, 'secretsmodules/profile.html', context = my_context)
+
 
 
 @login_required

@@ -11,6 +11,14 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
+import environ
+
+
+env = environ.Env(DEBUG=(bool, False),) # set default values and casting
+environ.Env.read_env()
+
+SECRET_KEY = env('SECRET_KEY')
+GOOGLE_RECAPTCHA_SECRET_KEY = env("GOOGLE_RECAPTCHA_SECRET_KEY")
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -18,11 +26,13 @@ TEMP_DIR = os.path.join(BASE_DIR,'templates')
 STATIC_DIR = os.path.join(BASE_DIR,'static')
 MEDIA_DIR = os.path.join(BASE_DIR,'media')
 
+
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '&4ch-lt5bazp=+c#k5l@g#9p94@gg5s15#3_iqg+houj*te35o'
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -113,7 +123,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
-GOOGLE_RECAPTCHA_SECRET_KEY ='6LdnVVwUAAAAANzONtrYhYWN-dB9NxoVr-fxolKL'
+
 
 
 LANGUAGE_CODE = 'en-us'

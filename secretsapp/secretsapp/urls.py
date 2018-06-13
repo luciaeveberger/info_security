@@ -13,5 +13,5 @@ urlpatterns = [
     url(r'^login/$', views.LoginForm.as_view(), name='login'),
     url(r'^', include('secretsmodules.urls')),
 ]
-if settings.DEBUG is True:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+#if settings.DEBUG is True:
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

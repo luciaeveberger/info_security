@@ -57,7 +57,7 @@ def get_user_secrets(request):
     for value in purchased_items:
         item = PurchasedItem.objects.get(cart_id=value['id']).__dict__
         secret_dict = {"secret": Secret.objects.filter(pk=item['secret_id']).values()[0],
-                       "purchase_date": value['purchase_date']}
+                       "purchase_date": value['purchase_date'], "pk": item['secret_id']}
         user_purchased.append(secret_dict)
 
     # sort by latest key

@@ -172,7 +172,7 @@ class RegisterForm(TemplateView):
             return render(request, 'secretsmodules/register.html', context={'form': form})
 
 
-class LoginForm(LoginRequiredMixin, TemplateView):
+class LoginForm(TemplateView):
     def get(self, request, **kwargs):
         if request.user.is_authenticated:
             return redirect('/')

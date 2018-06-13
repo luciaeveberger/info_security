@@ -1,4 +1,5 @@
 # howdy/urls.py
+from django.urls import path
 from django.conf.urls import url
 from secretsmodules import views
 
@@ -12,4 +13,5 @@ urlpatterns = [
     url('cart/', views.get_cart, name='cart'),
     url('user_secrets/', views.get_user_secrets, name='user_secrets'),
     url(r'^checkout/$', views.CheckoutView.as_view(), name='checkout'),
+    path('profile/',views.EditProfile.as_view(), name = 'profile'),
 ]

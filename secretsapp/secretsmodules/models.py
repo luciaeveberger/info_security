@@ -23,7 +23,7 @@ class Secret(models.Model):
 class UserProfile(models.Model):
     #username, password, first and last name and email are included in djangos user class
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name = 'profile')
     address = models.CharField(max_length = 264, unique = False, blank = True)
     phone = models.CharField(max_length = 20,  blank = True)
     balance = models.DecimalField(max_digits=20,decimal_places=2,default=Decimal('10000.00'))
